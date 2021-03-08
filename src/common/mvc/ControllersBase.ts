@@ -4,7 +4,15 @@ import {ViewBase} from "./ViewBase";
 
 export abstract class ControllersBase extends ControllerBase {
 
-    protected controllers: Record<any, ControllerBase> = {};
+    protected controllers: Record<any, ControllerBase>;
+
+    constructor(model: ModelBase, view: ViewBase) {
+        super(model, view);
+    }
+
+    initialize() {
+        this.controllers = {};
+    }
 
     addController(controllerCls: {new (model: ModelBase, view: ViewBase): ControllerBase}): void {
         const controller: ControllerBase = controllerCls[controllerCls.toString()];

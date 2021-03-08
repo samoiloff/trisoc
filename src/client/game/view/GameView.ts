@@ -1,11 +1,16 @@
 import {ViewBase} from "../../../common/mvc/ViewBase";
 import {GameModel} from "../model/GameModel";
-import {Cell} from "./cells/Cell";
+import {Cell} from "../../cell/Cell";
 import {Application} from "pixi.js";
+import {GameConstants} from "../../constants/GameConstants";
+import {Field} from "../../field/Field";
+import {CellsUtils} from "../../utils/CellsUtils";
 
 export class GameView extends ViewBase {
 
-    private app: PIXI.Application;
+    public app: PIXI.Application;
+
+    public field: Field;
 
     constructor(model: GameModel) {
         super(model);
@@ -17,12 +22,6 @@ export class GameView extends ViewBase {
             transparent: false,
             resolution: 1
         });
-
-        window.onload = () => {
-            document.body.appendChild(this.app.view);
-            this.app.stage.addChild(new Cell());
-            this.app.render();
-        }
     }
 
 }

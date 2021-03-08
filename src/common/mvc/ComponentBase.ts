@@ -2,6 +2,7 @@ import {ModelBase} from "./ModelBase";
 import {ViewBase} from "./ViewBase";
 import {ControllerBase} from "./ControllerBase";
 import {IControllerBase} from "./IControllerBase";
+import {DebugUtils} from "../../client/utils/DebugUtils";
 
 export abstract class ComponentBase {
 
@@ -17,6 +18,7 @@ export abstract class ComponentBase {
         this.model = new modelCls();
         this.view = new viewCls(this.model);
         this.controllerBase = new controllerCls(this.model, this.view);
+        DebugUtils.mapObjectToGlobalId(this, this.constructor["name"], "p");
     }
 
     getModel(): ModelBase {

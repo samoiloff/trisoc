@@ -9,8 +9,6 @@ export abstract class GameControllerBase extends ControllerBase {
 
     constructor(model: GameModel, view: GameView) {
         super(model, view);
-        this.initialize();
     }
 
-    protected abstract initialize(): void;
 }
