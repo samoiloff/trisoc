@@ -1,0 +1,55 @@
+{
+	"levels": [
+		{
+			"id": 0,
+			"stars": 0,
+			"file": "level_01.json"
+		},
+		{
+			"id": 1,
+			"stars": 0,
+			"file": "level_02.json"
+		},
+		{
+			"id": 2,
+			"stars": 0,
+			"file": "level_03.json"
+		},
+		{
+			"id": 3,
+			"stars": 0,
+			"file": "level_04.json"
+		},
+		{
+			"id": 4,
+			"stars": 0,
+			"file": "level_05.json"
+		},
+		{
+			"id": 5,
+			"stars": 0,
+			"file": "level_06.json"
+		},
+		{
+			"id": 6,
+			"stars": 0,
+			"file": "level_07.json"
+		},
+		{
+			"id": 7,
+			"stars": 0,
+			"file": "level_08.json"
+		},
+		{
+			"id": 8,
+			"stars": 0,
+			"file": "level_09.json"
+		},
+		{
+			"id": 9,
+			"stars": 0,
+			"file": "level_10.json"
+		}
+	]
+}
+	

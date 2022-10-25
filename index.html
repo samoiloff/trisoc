@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8">
-  <title>{{NAME}}</title>
+  <title>Trisoc Game</title>
   <meta id="viewport" name="viewport"
         content="width=device-width,user-scalable=no,initial-scale=1,maximum-scale=1, minimum-scale=1">
 
@@ -76,9 +76,19 @@
       width: 100%;
     }
   </style>
-  <script src="./game.js"></script>
+  <script src="./js/pixi.js"></script>
+<!--  <script src="./PIXI.bundle.js"></script>-->
+  <script>
+    function onLoad() {
+      // console.log(PIXI)
+      var scriptElement=document.createElement("script");
+      scriptElement.type = "text/javascript";
+      scriptElement.src = "./main.bundle.js";
+      document.head.appendChild(scriptElement);
+    }
+  </script>
   </head>
-<body>
+<body onload="onLoad()">
 <noscript>Sorry. JavaScript is not supported in this browser.</noscript>
 <div class="game-wrapper phantom-wrapper"></div>
 </body>

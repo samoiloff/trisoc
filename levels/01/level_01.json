@@ -1,0 +1,74 @@
+{
+	"turns": [
+		2,
+		3,
+		4
+	],
+	"colors": 4,
+	"aims": {
+		"5": {
+			"type": 5,
+			"data": [
+				2,
+				0,
+				2,
+				1
+			]
+		}
+	},
+	"cells": [
+		[
+			{
+				"posX": 0,
+				"posY": 0,
+				"features": [
+					5
+				],
+				"isEmpty": false
+			},
+			{
+				"posX": 1,
+				"posY": 0,
+				"features": [
+					5
+				],
+				"isEmpty": false
+			}
+		],
+		[
+			{
+				"posX": 0,
+				"posY": 1,
+				"features": [],
+				"isEmpty": false
+			},
+			{
+				"posX": 1,
+				"posY": 1,
+				"features": [],
+				"isEmpty": false
+			}
+		],
+		[
+			{
+				"posX": 0,
+				"posY": 2,
+				"features": [
+					6
+				],
+				"isEmpty": false
+			},
+			{
+				"posX": 1,
+				"posY": 2,
+				"features": [
+					6
+				],
+				"isEmpty": false
+			}
+		]
+	],
+	"fieldWidth": 2,
+	"fieldHeight": 3,
+	"levelType": 1
+}
