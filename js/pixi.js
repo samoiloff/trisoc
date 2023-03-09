@@ -10655,7 +10655,7 @@ var PIXI = (function (exports) {
        * Starts the ticker. If the ticker has listeners
        * a new animation frame is requested at this point.
        */
-      Ticker.prototype.start = function () {
+      Ticker.prototype.startScreen = function () {
           if (!this.started) {
               this.started = true;
               this._requestIfNeeded();
@@ -16249,7 +16249,7 @@ var PIXI = (function (exports) {
           this.normalized = normalized;
           this.type = type;
           this.stride = stride;
-          this.start = start;
+          this.startScreen = start;
           this.instance = instance;
       }
       /** Destroys the Attribute. */
@@ -16731,7 +16731,7 @@ var PIXI = (function (exports) {
        * @param destinationFrame - The second rectangle
        * @return - Returns itself.
        */
-      QuadUv.prototype.map = function (targetTextureFrame, destinationFrame) {
+      QuadUv.prototype.mapScreen = function (targetTextureFrame, destinationFrame) {
           var x = 0; // destinationFrame.x / targetTextureFrame.width;
           var y = 0; // destinationFrame.y / targetTextureFrame.height;
           this.uvs[0] = x;
@@ -17343,7 +17343,7 @@ var PIXI = (function (exports) {
        * signal, which occurs every frame, in that it is called
        * whenever an object requests _this_ renderer specifically.
        */
-      ObjectRenderer.prototype.start = function () {
+      ObjectRenderer.prototype.startScreen = function () {
           // set the shader..
       };
       /**
@@ -21248,7 +21248,7 @@ var PIXI = (function (exports) {
           this.blendMode = exports.BLEND_MODES.NONE;
           this._blendEq = false;
           // map functions for when we set state..
-          this.map = [];
+          this.mapScreen = [];
           this.map[BLEND] = this.setBlend;
           this.map[OFFSET] = this.setOffset;
           this.map[CULLING] = this.setCullFace;
@@ -22263,7 +22263,7 @@ var PIXI = (function (exports) {
           thisAny.plugins = null;
           thisAny.type = exports.RENDERER_TYPE.UNKNOWN;
           thisAny.view = null;
-          thisAny.screen = null;
+          thisAny.screenType = null;
           thisAny._tempDisplayObjectParent = null;
           thisAny.options = null;
           this._backgroundColorRgba = null;
@@ -22885,7 +22885,7 @@ var PIXI = (function (exports) {
           this.texArray = null;
           this.blend = 0;
           this.type = exports.DRAW_MODES.TRIANGLES;
-          this.start = 0;
+          this.startScreen = 0;
           this.size = 0;
           this.data = null;
       }
@@ -23283,7 +23283,7 @@ var PIXI = (function (exports) {
           this._indexCount = 0;
       };
       /** Starts a new sprite batch. */
-      AbstractBatchRenderer.prototype.start = function () {
+      AbstractBatchRenderer.prototype.startScreen = function () {
           this.renderer.state.set(this.state);
           this.renderer.texture.ensureSamplerType(this.MAX_TEXTURES);
           this.renderer.shader.bind(this._shader);
@@ -29307,7 +29307,7 @@ var PIXI = (function (exports) {
       BatchPart.prototype.begin = function (style, startIndex, attribStart) {
           this.reset();
           this.style = style;
-          this.start = startIndex;
+          this.startScreen = startIndex;
           this.attribStart = attribStart;
       };
       /** End batch part. */
@@ -29318,7 +29318,7 @@ var PIXI = (function (exports) {
       BatchPart.prototype.reset = function () {
           this.style = null;
           this.size = 0;
-          this.start = 0;
+          this.startScreen = 0;
           this.attribStart = 0;
           this.attribSize = 0;
       };
