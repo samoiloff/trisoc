@@ -48,12 +48,12 @@ class Cell extends pixi_js__WEBPACK_IMPORTED_MODULE_0__.Sprite {
     }
     match() {
         return new Promise((resolve) => {
-            gsap__WEBPACK_IMPORTED_MODULE_6__["default"].to(this.triangle.scale, {
+            gsap__WEBPACK_IMPORTED_MODULE_6__["default"].to(this.container.scale, {
                 x: 0.1,
                 y: 0.1,
                 duration: 0.3
             });
-            gsap__WEBPACK_IMPORTED_MODULE_6__["default"].to(this.triangle, {
+            gsap__WEBPACK_IMPORTED_MODULE_6__["default"].to(this.container, {
                 alpha: 0,
                 delay: 0.1,
                 duration: 0.2,
@@ -66,9 +66,11 @@ class Cell extends pixi_js__WEBPACK_IMPORTED_MODULE_0__.Sprite {
     }
     onCellDown(event) {
         this.view.getModel().dispatch(_events_FieldEvent__WEBPACK_IMPORTED_MODULE_5__.FieldEvent.CELL_MOUSE_PRESS, event);
+        event.stopPropagation();
     }
     onCellUp(event) {
         this.view.getModel().dispatch(_events_FieldEvent__WEBPACK_IMPORTED_MODULE_5__.FieldEvent.CELL_MOUSE_RELEASE, event);
+        event.stopPropagation();
     }
     addText() {
         if (!this.text) {
@@ -3232,6 +3234,7 @@ const FieldEvent = {
     SEGMENT_SET: "FieldEvent.SEGMENT_SET",
     SEGMENT_MOVE: "FieldEvent.SEGMENT_MOVE",
     SEGMENT_ACTIVATE: "FieldEvent.SEGMENT_ACTIVATE",
+    SEGMENT_DEACTIVATE: "FieldEvent.SEGMENT_DEACTIVATE",
     SHADOW_VISIBLE_CHANGED: "FieldEvent.SHADOW_VISIBLE_CHANGED",
     DRAG_DIRECTION_SET: "FieldEvent.DRAG_DIRECTION_SET",
     DRAG_SEGMENT_COMPLETE: "FieldEvent.DRAG_SEGMENT_COMPLETE",
@@ -4315,6 +4318,7 @@ class TurnApplyDisplamentToFieldCmd extends _FieldCommandBase__WEBPACK_IMPORTED_
     internalRun() {
         super.internalRun();
         const pressedCell = this.view.getPressedCell();
+        this.model.dispatch(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldEvent.SEGMENT_DEACTIVATE);
         this.view.dragView.dragSegments.forEach((dragSegment) => {
             const displacement = dragSegment.getDisplacement();
             const dragDirection = dragSegment.getDragDirection();
@@ -4434,6 +4438,7 @@ class TurnFieldFallDownCmd extends _FieldCommandBase__WEBPACK_IMPORTED_MODULE_0_
         const tweens = [];
         for (let posX = 0; posX < this.fieldWidth; posX++) {
             let emptyCellsCount = 0;
+            let fallingCellsCount = 0;
             for (let posY = this.fieldHeight - 1; posY >= 0; posY--) {
                 const cell = cells[posY][posX];
                 if (removedState[posY][posX]) {
@@ -4442,6 +4447,7 @@ class TurnFieldFallDownCmd extends _FieldCommandBase__WEBPACK_IMPORTED_MODULE_0_
                 }
                 else {
                     if (emptyCellsCount !== 0) {
+                        fallingCellsCount++;
                         const targetPosY = posY + emptyCellsCount;
                         const coordY = _trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldUtils.posYToCoords(targetPosY);
                         tweens.push(gsap__WEBPACK_IMPORTED_MODULE_2__["default"].to(cell, {
@@ -4452,7 +4458,8 @@ class TurnFieldFallDownCmd extends _FieldCommandBase__WEBPACK_IMPORTED_MODULE_0_
                         if (cell.data.direction !== targetDirection) {
                             tweens.push(gsap__WEBPACK_IMPORTED_MODULE_2__["default"].to(cell.container.scale, {
                                 x: targetDirection === _trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.CellDirection.LEFT ? -1 : 1,
-                                duration: 0.25
+                                duration: 0.25,
+                                delay: fallingCellsCount * 0.05
                             }));
                         }
                         console.log(`CellFall from:(${_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.CellsUtils.cellToString(cell.data.posX, cell.data.posY, cell.data.direction, cell.data.color)}`);
@@ -4705,13 +4712,13 @@ class TurnWaitPointerLeftCellCmd extends _FieldCommandBase__WEBPACK_IMPORTED_MOD
                 pressedCell.cellsData = this.dragUtils.getDragCellsData(this.view);
                 pressedCell.displacement = pressedCell.displacementFunction(dx, dy);
                 this.model.dispatch(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldEvent.SEGMENT_MOVE, pressedCell);
-                this.model.dispatch(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldEvent.SEGMENT_ACTIVATE, pressedCell);
                 this.internalResolve();
             }
         }
         else {
             this.model.dispatch(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldEvent.TURN_CANCEL);
         }
+        event.stopPropagation();
     }
 }
 
@@ -4752,6 +4759,7 @@ class TurnWaitSegmentMoveCmd extends _FieldCommandBase__WEBPACK_IMPORTED_MODULE_
         const segment = new _field_view_drag_DragSegmentView__WEBPACK_IMPORTED_MODULE_2__.DragSegmentView(this.view, cellsData);
         this.model.setShadowVisible(true);
         this.view.dragView.addDragSegment(segment);
+        this.model.dispatch(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_0__.FieldEvent.SEGMENT_ACTIVATE);
     }
     internalResolve() {
         this.view.hitsContainer.off("pointermove", this.onMouseMove, this);
@@ -4965,14 +4973,33 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "FieldCellsController": () => (/* binding */ FieldCellsController)
 /* harmony export */ });
 /* harmony import */ var _FieldControllerBase__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./FieldControllerBase */ "./src/client/field/controller/FieldControllerBase.ts");
+/* harmony import */ var _trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @trisoc/client-common */ "../client-common/src/index.ts");
+
 
 class FieldCellsController extends _FieldControllerBase__WEBPACK_IMPORTED_MODULE_0__.FieldControllerBase {
     initialize() {
         this.cellsContainer = this.view.cellsContainer;
         this.cellsContainer.interactive = this.cellsContainer.interactiveChildren = true;
+        this.model.addListener(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldEvent.SEGMENT_ACTIVATE, this.onSegmentsActivate, this);
+        this.model.addListener(_trisoc_client_common__WEBPACK_IMPORTED_MODULE_1__.FieldEvent.SEGMENT_DEACTIVATE, this.onSegmentsDeactivate, this);
+        // this.model.addListener(FieldEvent.)
         // this.model.addListener(FieldEvent.INIT_FIELD_VIEW, this.onInitFieldView, this);
         // this.model.addListener(FieldEvent.CELL_ADDED, this.onCellAdded, this);
         // this.model.addListener(FieldEvent.CELL_REMOVED, this.onCellRemoved, this);
+    }
+    onSegmentsActivate() {
+        this.view.dragView.dragSegments.forEach((segment) => {
+            segment.getCellsData().forEach((cellData) => {
+                this.view.cells[cellData.posY][cellData.posX].visible = false;
+            });
+        });
+    }
+    onSegmentsDeactivate() {
+        this.view.dragView.dragSegments.forEach((segment) => {
+            segment.getCellsData().forEach((cellData) => {
+                this.view.cells[cellData.posY][cellData.posX].visible = true;
+            });
+        });
     }
 }
 
